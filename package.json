@@ -2,14 +2,23 @@
   "name": "hokkaidle-discord-bot",
   "version": "1.0.0",
   "description": "",
-  "main": "./src/index.js",
   "scripts": {
-    "start": "node ./src/index.js",
+    "start": "npm run compile && node build/index.js",
+    "compile": "tsc -p .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "^14.15.3"
+    "discord.js": "^14.15.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.2"
+  },
+  "devDependencies": {
+    "@eslint/compat": "^1.1.0",
+    "@eslint/js": "^9.5.0",
+    "eslint": "^9.5.0",
+    "eslint-plugin-react": "^7.34.3",
+    "globals": "^15.6.0"
   }
 }

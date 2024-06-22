@@ -132,3 +132,6 @@ dist
 config.json
 
 .DS_Store
+
+build
+build/*
