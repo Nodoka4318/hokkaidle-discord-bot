@@ -28,10 +28,10 @@ export class Region {
     }
 
     calcBearing(region: Region): number {
-        const dLon = Region.degToRad(region.longitude - this.longitude);
-        const y = Math.sin(dLon) * Math.cos(Region.degToRad(region.latitude));
-        const x = Math.cos(Region.degToRad(this.latitude)) * Math.sin(Region.degToRad(region.latitude)) -
-            Math.sin(Region.degToRad(this.latitude)) * Math.cos(Region.degToRad(region.latitude)) * Math.cos(dLon);
+        const dLon = Region.degToRad(this.longitude - region.longitude);
+        const y = Math.sin(dLon) * Math.cos(Region.degToRad(this.latitude));
+        const x = Math.cos(Region.degToRad(region.latitude)) * Math.sin(Region.degToRad(this.latitude)) -
+            Math.sin(Region.degToRad(region.latitude)) * Math.cos(Region.degToRad(this.latitude)) * Math.cos(dLon);
 
         let brng = Math.atan2(y, x);
 
@@ -43,6 +43,8 @@ export class Region {
 
     getDirectionArrow(region: Region): string {
         const bearing = this.calcBearing(region);
+
+        // 計算して出せばよかった
         if (bearing >= 337.5 || bearing < 22.5) {
             return '⬆️';
         } else if (bearing >= 22.5 && bearing < 67.5) {
