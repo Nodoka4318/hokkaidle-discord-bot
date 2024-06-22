@@ -17,13 +17,13 @@ export class Region {
         const R = 6371; // 地球半径
         const dLat = Region.degToRad(region.latitude - this.latitude);
         const dLon = Region.degToRad(region.longitude - this.longitude);
-        const a = 
+        const a =
             Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos(Region.degToRad(this.latitude)) * Math.cos(Region.degToRad(region.latitude)) * 
-            Math.sin(dLon / 2) * Math.sin(dLon / 2); 
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)); 
+            Math.cos(Region.degToRad(this.latitude)) * Math.cos(Region.degToRad(region.latitude)) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         const distance = R * c;
-        
+
         return distance;
     }
 
@@ -31,14 +31,36 @@ export class Region {
         const dLon = Region.degToRad(region.longitude - this.longitude);
         const y = Math.sin(dLon) * Math.cos(Region.degToRad(region.latitude));
         const x = Math.cos(Region.degToRad(this.latitude)) * Math.sin(Region.degToRad(region.latitude)) -
-                  Math.sin(Region.degToRad(this.latitude)) * Math.cos(Region.degToRad(region.latitude)) * Math.cos(dLon);
-        
+            Math.sin(Region.degToRad(this.latitude)) * Math.cos(Region.degToRad(region.latitude)) * Math.cos(dLon);
+
         let brng = Math.atan2(y, x);
 
         brng = Region.radToDeg(brng);
         brng = (brng + 360) % 360;
 
         return brng;
+    }
+
+    getDirectionArrow(region: Region): string {
+        const bearing = this.calcBearing(region);
+        if (bearing >= 337.5 || bearing < 22.5) {
+            return '⬆️';
+        } else if (bearing >= 22.5 && bearing < 67.5) {
+            return '↗️';
+        } else if (bearing >= 67.5 && bearing < 112.5) {
+            return '➡️';
+        } else if (bearing >= 112.5 && bearing < 157.5) {
+            return '↘️';
+        } else if (bearing >= 157.5 && bearing < 202.5) {
+            return '⬇️';
+        } else if (bearing >= 202.5 && bearing < 247.5) {
+            return '↙️';
+        } else if (bearing >= 247.5 && bearing < 292.5) {
+            return '⬅️';
+        } else if (bearing >= 292.5 && bearing < 337.5) {
+            return '↖️';
+        }
+        return '';
     }
 
     private static degToRad(deg: number): number {

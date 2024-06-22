@@ -98,7 +98,7 @@ async function game(interaction: any) {
             components: [new ActionRowBuilder().addComponents(subprefectureSelect)]
         });
 
-        const subprefectureCollector = subprefectureResponse.createMessageComponentCollector({ componentType: ComponentType.StringSelect, time: 3_600_000 });
+        const subprefectureCollector = subprefectureResponse.createMessageComponentCollector({ componentType: ComponentType.StringSelect, time: 600000 });
 
         let currentRegionResponse: any;
 
@@ -118,7 +118,7 @@ async function game(interaction: any) {
 
             currentRegionResponse = regionResponse;
 
-            const regionCollector = regionResponse.createMessageComponentCollector({ componentType: ComponentType.StringSelect, time: 3_600_000 });
+            const regionCollector = regionResponse.createMessageComponentCollector({ componentType: ComponentType.StringSelect, time: 600000 });
 
             // TODO: このネスト汚いな
             regionCollector.on('collect', async (j: any) => {
@@ -143,7 +143,7 @@ async function game(interaction: any) {
                     return;
                 } else {
                     let selectedTown = `${selected?.subprefecture} ${selected?.name}`;
-                    let bearing = randomRegion.calcBearing(selected!).toFixed(1);
+                    let bearing = randomRegion.getDirectionArrow(selected!)
                     let distance = randomRegion.calcDistance(selected!).toFixed(1);
 
                     await j.reply({
