@@ -119,7 +119,6 @@ async function game(interaction: any) {
             currentRegionResponse = regionResponse;
 
             const regionCollector = regionResponse.createMessageComponentCollector({ componentType: ComponentType.StringSelect, time: 3_600_000 });
-            console.log(randomRegion)
 
             // TODO: このネスト汚いな
             regionCollector.on('collect', async (j: any) => {
