@@ -1,5 +1,5 @@
 # Hokkaidle Discord Bot
-inspired by [Original Hokkaidle](https://hokkaidle.web.app)
+inspired by [Original Hokkaidle](https://hokkaidle.web.app) ([GitHub](https://github.com/takapiro99/hokkaidle))
 
 all resources are from [国土数値情報ダウンロード-国土地理院](https://nlftp.mlit.go.jp/ksj/index.html)
 
