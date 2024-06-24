@@ -5,6 +5,8 @@ export class Region {
     latitude: number
     longitude: number
 
+    private static MAX_DISTANCE = 450_000;
+
     constructor(name: string, subprefecture: string, code: number, latitude: number, longitude: number) {
         this.name = name;
         this.subprefecture = subprefecture;
@@ -63,6 +65,25 @@ export class Region {
             return '↖️';
         }
         return '';
+    }
+
+    calcPercent(region: Region): number {
+        let distance = this.calcDistance(region) * 1000; // km -> m
+        let proximity = Math.max(Region.MAX_DISTANCE - distance, 0);
+
+        return Math.round((proximity / Region.MAX_DISTANCE) * 100);
+    }
+
+    static getSquareCharacters(proximity: number): string[] {
+        const characters = new Array<string>(5);
+        const greenSquareCount = Math.floor(proximity / 20);
+        const yellowSquareCount = proximity - greenSquareCount * 20 >= 10 ? 1 : 0;
+
+        characters.fill("🟩", 0, greenSquareCount);
+        characters.fill("🟨", greenSquareCount, greenSquareCount + yellowSquareCount);
+        characters.fill("⬜", greenSquareCount + yellowSquareCount);
+
+        return characters;
     }
 
     private static degToRad(deg: number): number {

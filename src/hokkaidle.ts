@@ -1,4 +1,4 @@
-import { ActionRowBuilder, AttachmentBuilder, ComponentType, EmbedBuilder, SlashCommandBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from "discord.js";
+import { ActionRowBuilder, AttachmentBuilder, Colors, ComponentType, EmbedBuilder, SlashCommandBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from "discord.js";
 import { Region } from "./region";
 import { SubprefectureMap } from "./subprefectureMap";
 
@@ -87,7 +87,9 @@ async function game(interaction: any) {
     }
 
     let selectedTowns: string[] = [];
+    let boxesList: string[][] = [];
     let i = 0;
+
     const loop = async () => {
         let subprefectureSelect = new StringSelectMenuBuilder()
             .setCustomId("subprefecture")
@@ -125,13 +127,20 @@ async function game(interaction: any) {
                 const regionSelection = j.values[0];
                 const selected = regions.find(r => r.code == regionSelection);
 
+                let percent = randomRegion.calcPercent(selected!);
+                let boxes = Region.getSquareCharacters(percent);
+
                 selectedTowns.push(`${selected?.subprefecture} ${selected?.name}`);
+                boxesList.push(boxes);
 
                 if (regionSelection == randomRegion.code) {
                     const finEmbed = new EmbedBuilder()
-                        .setColor('#0099ff')
+                        .setColor(Colors.Blurple)
                         .setTitle('Hokkaidle')
-                        .setDescription(`${i + 1}/5\n\n||${selectedTowns.join(" → ")}||`);
+                        .setDescription(`${i + 1}/5\n${boxesList.map(l => l.join("")).join("\n")}`)
+                        .addFields(
+                            { name: "あなたの選択", value: `||${selectedTowns.join(" → ")}||` }
+                        );
 
                     await j.reply({
                         embeds: [finEmbed]
@@ -146,8 +155,18 @@ async function game(interaction: any) {
                     let bearing = randomRegion.getDirectionArrow(selected!)
                     let distance = randomRegion.calcDistance(selected!).toFixed(1);
 
+                    const guessEmbed = new EmbedBuilder()
+                        .setColor(Colors.LuminousVividPink)
+                        .setTitle("Hokkaidle")
+                        .setDescription(`${percent}%\n${boxes.join("")}`)
+                        .addFields(
+                            { name: "選んだ地域", value: `||${selectedTown}||`}, 
+                            { name: "方角", value: `${bearing}`, inline: true },
+                            { name: "距離", value: `${distance}km`, inline: true }
+                        );
+                    
                     await j.reply({
-                        content: `選んだ地域：||${selectedTown}||\n方角：${bearing}°, 距離：${distance}km`
+                        embeds: [guessEmbed]
                     });
 
                     currentRegionResponse.delete();
@@ -156,9 +175,13 @@ async function game(interaction: any) {
 
                 if (i >= 4) {
                     const finEmbed = new EmbedBuilder()
-                        .setColor('#0099ff')
+                        .setColor(Colors.Red)
                         .setTitle('Hokkaidle')
-                        .setDescription(`*/5\n\n||${selectedTowns.join(" → ")}||\n\n答え：||${randomRegion.subprefecture} ${randomRegion.name}||`);
+                        .setDescription(`*/5\n${boxesList.map(l => l.join("")).join("\n")}`)
+                        .addFields(
+                            { name: "答え", value: `||${randomRegion.subprefecture} ${randomRegion.name}||` },
+                            { name: "あなたの選択", value: `||${selectedTowns.join(" → ")}||` },
+                        );
 
                     interaction.followUp({
                         embeds: [finEmbed]
