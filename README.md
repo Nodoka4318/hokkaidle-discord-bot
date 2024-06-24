@@ -28,7 +28,6 @@ import os
 geojson_file = '/path/to/your.geojson'
 gdf = gpd.read_file(geojson_file)
 
-
 municipality_name_field = 'N03_004'
 district_name_field = 'N03_005'
 subprefecture_name_field = 'N03_002'
