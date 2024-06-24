@@ -42,6 +42,8 @@ async function game(interaction: any) {
     const randomRegion = regions[randomIndex];
     const imageUrl = path.join(__dirname, `${imagesPath}/${randomRegion.code}.png`);
 
+    console.log(randomRegion);
+    
     const embed = new EmbedBuilder()
         .setColor('#0099ff')
         .setTitle('Hokkaidle')
@@ -133,17 +135,21 @@ async function game(interaction: any) {
                 selectedTowns.push(`${selected?.subprefecture} ${selected?.name}`);
                 boxesList.push(boxes);
 
+                j.deferUpdate();
+
                 if (regionSelection == randomRegion.code) {
                     const finEmbed = new EmbedBuilder()
                         .setColor(Colors.Blurple)
                         .setTitle('Hokkaidle')
                         .setDescription(`${i + 1}/5\n${boxesList.map(l => l.join("")).join("\n")}`)
+                        .setThumbnail("attachment://region.png")
                         .addFields(
                             { name: "あなたの選択", value: `||${selectedTowns.join(" → ")}||` }
                         );
 
-                    await j.reply({
-                        embeds: [finEmbed]
+                    await interaction.followUp({
+                        embeds: [finEmbed],
+                        files: [attachment]
                     });
 
                     currentRegionResponse.delete();
@@ -165,7 +171,7 @@ async function game(interaction: any) {
                             { name: "距離", value: `${distance}km`, inline: true }
                         );
                     
-                    await j.reply({
+                    await interaction.followUp({
                         embeds: [guessEmbed]
                     });
 
@@ -178,13 +184,15 @@ async function game(interaction: any) {
                         .setColor(Colors.Red)
                         .setTitle('Hokkaidle')
                         .setDescription(`*/5\n${boxesList.map(l => l.join("")).join("\n")}`)
+                        .setThumbnail("attachment://region.png")
                         .addFields(
                             { name: "答え", value: `||${randomRegion.subprefecture} ${randomRegion.name}||` },
                             { name: "あなたの選択", value: `||${selectedTowns.join(" → ")}||` },
                         );
 
                     interaction.followUp({
-                        embeds: [finEmbed]
+                        embeds: [finEmbed],
+                        files: [attachment]
                     });
 
                     return;
